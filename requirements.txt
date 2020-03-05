@@ -1,0 +1,11 @@
+django
+gunicorn
+django-heroku
+django-bootstrap3
+django-tables2
+django-filter
+psycopg2
+dj-database-url
+psycopg2-binary
+django-import-export
+django-allauth

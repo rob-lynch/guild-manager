@@ -1,0 +1,5 @@
+id,name,guild_join_date,raid_eligibility_date,rank,level,playable_class,race,total_raids_at_60,raid_count_override
+,Cartman,1/1/2020,1/1/2020,Guild Master,60,Rogue,Dwarf
+,Kenny,1/7/2020,1/15/2020,Member,60,Hunter,Human
+,Kyle,,2/18/2020,Officer,60,Mage,Human
+,Stan,1/1/2020,,Member,30,Warrior,Human
