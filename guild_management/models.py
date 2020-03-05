@@ -152,6 +152,7 @@ class Loot(models.Model):
     #Create a creature model that links to raids
     #
     priority = models.BooleanField()
+    notes = models.TextField(blank=True, null=True)
 
 class Attendance(models.Model):    
     def __str__(self):

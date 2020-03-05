@@ -49,6 +49,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'character',
         'item',
         'priority',
+        'notes',
     )
 
     list_filter = (
