@@ -48,12 +48,14 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'raid',
         'character',
         'item',
+        'priority',
     )
 
     list_filter = (
         'raid',
         'item',
         'character',
+        'priority',
     )
     
     resource_class = AttendanceResource

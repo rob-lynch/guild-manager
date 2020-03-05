@@ -149,7 +149,10 @@ class Loot(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     raid = models.ForeignKey(Raid, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    
+    #Create a creature model that links to raids
+    #
+    priority = models.BooleanField()
+
 class Attendance(models.Model):    
     def __str__(self):
         return str(self.raid.instance_date) + ' - ' + self.raid.instance.name + ': ' + self.raid_character.name
