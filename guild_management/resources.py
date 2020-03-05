@@ -73,3 +73,7 @@ class LootResource(resources.ModelResource):
 
     class Meta:
         model = Loot
+
+class ItemResource(resources.ModelResource):
+    class Meta:
+        model = Item

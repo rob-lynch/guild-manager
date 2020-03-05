@@ -20,8 +20,9 @@ class Item(models.Model):
     class Meta:
         ordering = ['name']
 
-    name = models.CharField('Item name', max_length=64, unique=True)
-   
+    name = models.CharField('Item name', max_length=64)
+    item_id = models.SmallIntegerField(blank=True, null=True, unique=True)
+
 class Race(models.Model):
     def __str__(self):
        return self.name
