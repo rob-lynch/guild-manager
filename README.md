@@ -64,7 +64,7 @@ python manage.py runserver
 * Navigate to `/admin/socialaccount/socialapp/add/` and set the Provider, Name, Client ID, and Secret key that correlates to your Discord App. Select site setup in step 1 and save your changes.
 * Go to `/accounts/discord/login/?process=login` to attempt to login.
   
-Note, the OAUTH user will not be able to access the admin portal until another admin grants permissions to the newly created account.
+Note, the OAUTH user will not be able to access the admin portal until another admin grants at least "staff status" to the newly created account.
 
 ### Initial Provisioning to Heroku
 Use the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) to create, manager and deploy the solution.
