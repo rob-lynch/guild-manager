@@ -1,10 +1,11 @@
 from guild_manager.settings.base import *
-
+from django.utils.crypto import get_random_string
 import django_heroku
 
-key = os.environ.get['SECRET_KEY']
+chars='abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+SECRET_KEY=get_random_string(50, chars)
 
-SECRET_KEY = key
+DEBUG = True
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
