@@ -4,5 +4,8 @@ import django_heroku
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
+key = os.environ.get('SECRET_KEY')
+SECRET_KEY = key
+
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
