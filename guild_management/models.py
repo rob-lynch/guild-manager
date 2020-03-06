@@ -161,7 +161,7 @@ class Loot(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     raid = models.ForeignKey(Raid, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    boss = models.ForeignKey(Npc, on_delete=models.CASCADE)
+    boss = models.ForeignKey(Npc, on_delete=models.CASCADE, null=True, blank=True)
     priority = models.BooleanField()
     notes = models.TextField(blank=True, null=True)
 
