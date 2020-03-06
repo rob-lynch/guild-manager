@@ -24,7 +24,6 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'playable_class',
         'race',
         'guild',
-        'realm',
         'rank',
     )
 
