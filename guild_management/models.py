@@ -100,7 +100,6 @@ class Character(models.Model):
     playable_class = models.ForeignKey(PlayableClass, on_delete=models.CASCADE, verbose_name='Class', null=True, blank=True)
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, blank=True)
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE, default=1)
-    realm = models.ForeignKey(Realm, on_delete=models.CASCADE, default=1)
     rank = models.ForeignKey(Rank, on_delete=models.CASCADE, default=4)
     raid_count_override = models.SmallIntegerField(blank=False, default=0)
 
