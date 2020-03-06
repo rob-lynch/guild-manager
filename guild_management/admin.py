@@ -47,6 +47,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         js = ("https://classicdb.ch/templates/wowhead/js/power.js",)
     list_display = (
         'raid',
+        'boss',
         'character',
         'item',
         'priority',
