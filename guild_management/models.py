@@ -85,6 +85,7 @@ class Raid(models.Model):
         return str(self.instance_date) + ' - ' + self.instance.name
 
     unique_instance_name = get_unique_instance
+
 class Character(models.Model):
     def __str__(self):
         return self.name
@@ -139,6 +140,16 @@ class Character(models.Model):
 
     attendance_percentage = get_attended_raids_percentage
 
+class Npc(models.Model):
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name',]
+
+    name = models.CharField('NPC name', max_length=32, unique=True)
+    instance = models.ForeignKey(Instance, on_delete=models.CASCADE, null=True)
+
 class Loot(models.Model):
     def __str__(self):
         return self.character.name
@@ -150,8 +161,7 @@ class Loot(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     raid = models.ForeignKey(Raid, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    #Create a creature model that links to raids
-    #
+    boss = models.ForeignKey(Npc, on_delete=models.CASCADE)
     priority = models.BooleanField()
     notes = models.TextField(blank=True, null=True)
 
