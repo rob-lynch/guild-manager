@@ -44,27 +44,40 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     resource_class = AttendanceResource
 
 class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    class Media:
+        js = ("https://classicdb.ch/templates/wowhead/js/power.js",)
     list_display = (
         'raid',
         'character',
         'item',
+        'priority',
+        'notes',
     )
 
     list_filter = (
         'raid',
-        'item',
         'character',
+        'priority',
     )
     
     resource_class = AttendanceResource
+
+class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    list_display = (
+        'name',
+        'item_id',
+    )
+
+    resource_class = ItemResource
 
 admin.site.register(PlayableClass)
 admin.site.register(Race)
 admin.site.register(Rank)
 admin.site.register(Realm)
 admin.site.register(Instance)
-admin.site.register(Item)
+admin.site.register(Item, ItemAdmin)
 admin.site.register(Guild)
+admin.site.register(Npc)
 admin.site.register(Raid)
 admin.site.register(Loot, LootAdmin)
 admin.site.register(Character, CharacterAdmin)
