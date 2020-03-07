@@ -86,6 +86,10 @@ class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
             return mark_safe('<a href="%s/change/" rel="item=%s">%s</a>' % (obj.id, obj.item_id, obj.name))
         else:
             return obj.name
+
+    item_link.allow_tags = True
+    item_link.short_description = "Item"
+
     resource_class = ItemResource
 
 admin.site.register(PlayableClass)
