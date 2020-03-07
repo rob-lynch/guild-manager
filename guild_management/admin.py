@@ -58,6 +58,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 
     list_filter = (
         'raid',
+        'boss',
         'character',
         'priority',
     )
