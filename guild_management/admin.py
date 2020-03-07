@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import *
 from .resources import *
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
+from django.utils.html import mark_safe
 
 class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_display = (
@@ -45,11 +46,12 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
         js = ("https://classicdb.ch/templates/wowhead/js/power.js",)
+
     list_display = (
         'raid',
         'boss',
         'character',
-        'item',
+        'item_link',
         'priority',
         'notes',
     )
@@ -59,15 +61,31 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'character',
         'priority',
     )
+
+    def item_link(self,obj):
+        if obj.item.item_id:
+            return mark_safe('<a href="https://classicdb.ch/?item=%s" target="blank" rel="item=%s">%s</a>' % (obj.item.item_id, obj.item.item_id, obj.item))
+        else:
+            return obj.item.name
+    item_link.allow_tags = True
+    item_link.short_description = "Item"
     
     resource_class = AttendanceResource
 
 class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    class Media:
+        js = ("https://classicdb.ch/templates/wowhead/js/power.js",)
+
     list_display = (
-        'name',
+        'item_link',
         'item_id',
     )
 
+    def item_link(self,obj):
+        if obj.item_id:
+            return mark_safe('<a href="%s/change/" rel="item=%s">%s</a>' % (obj.id, obj.item_id, obj.name))
+        else:
+            return obj.name
     resource_class = ItemResource
 
 admin.site.register(PlayableClass)
