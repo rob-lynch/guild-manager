@@ -159,11 +159,6 @@ class Migration(migrations.Migration):
             name='rank',
             field=models.ForeignKey(default=4, on_delete=django.db.models.deletion.CASCADE, to='guild_management.Rank'),
         ),
-        migrations.AddField(
-            model_name='character',
-            name='realm',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='guild_management.Realm'),
-        ),
         migrations.CreateModel(
             name='Attendance',
             fields=[
