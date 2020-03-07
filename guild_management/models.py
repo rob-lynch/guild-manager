@@ -82,7 +82,7 @@ class Raid(models.Model):
 
     @property
     def get_unique_instance(self):
-        return str(self.instance_date) + ' - ' + self.instance.name
+        return self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
 
     unique_instance_name = get_unique_instance
 
@@ -117,11 +117,14 @@ class Character(models.Model):
 
     @property
     def get_eligible_raids_count(self):
-        eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
-        eligible_actual = Raid.objects.filter(instance_date__gt=eligibility_date).count()
-        #This is incorrect
-        eligible_adjusted = eligible_actual + self.raid_count_override
-        return eligible_adjusted
+        if self.raid_eligibility_date:
+            eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
+            eligible_actual = Raid.objects.filter(instance_date__gt=eligibility_date).count()
+            #This is incorrect
+            eligible_adjusted = eligible_actual + self.raid_count_override
+            return eligible_adjusted
+        else:
+            return 0
 
     number_or_raids_attended = get_raids_attended_count
     number_of_eligible_raids = get_eligible_raids_count
