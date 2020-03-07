@@ -151,13 +151,14 @@ class Npc(models.Model):
 
     name = models.CharField('NPC name', max_length=32, unique=True)
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE, null=True)
+    instance_appearance_order = models.SmallIntegerField(blank=True, null=True, unique=True)
 
 class Loot(models.Model):
     def __str__(self):
         return self.item.name
     
     class Meta:
-        ordering = ['-raid__instance_date','character__name','item__name']
+        ordering = ['-raid__instance_date','boss__name','boss__instance_appearance_order','character__name','item__name']
         verbose_name_plural = 'loot'
 
     character = models.ForeignKey(Character, on_delete=models.CASCADE, blank=True, null=True)
