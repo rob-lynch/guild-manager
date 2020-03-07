@@ -151,13 +151,13 @@ class Npc(models.Model):
 
 class Loot(models.Model):
     def __str__(self):
-        return self.character.name
+        return self.item.name
     
     class Meta:
         ordering = ['-raid__instance_date','character__name','item__name']
         verbose_name_plural = 'loot'
-    
-    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, blank=True, null=True)
     raid = models.ForeignKey(Raid, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     boss = models.ForeignKey(Npc, on_delete=models.CASCADE, null=True, blank=True)
