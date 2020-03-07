@@ -4,6 +4,8 @@ import django_heroku
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+DEBUG = os.environ.get('DEBUG')
+
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
