@@ -41,8 +41,6 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'attendance_percentage',
     )
     
-    #Should add a filter that hides alts by default
-
     list_filter = (
         AltFilter,
         'level', 
@@ -53,6 +51,8 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'guild',
         'rank',
     )
+
+    search_fields = ('name',)
 
     def name_alt(self,obj):
         if obj.main_character:
@@ -132,6 +132,8 @@ class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'item_link',
         'item_id',
     )
+
+    search_fields = ('name','item_id',)
 
     def item_link(self,obj):
         if obj.item_id:
