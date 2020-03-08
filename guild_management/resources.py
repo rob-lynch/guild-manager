@@ -36,17 +36,41 @@ class CharacterResource(resources.ModelResource):
     class Meta:
         model = Character
 
+class RaidForeignKeyWidget(ForeignKeyWidget):
+    def get_queryset(self, value, row):
+        return self.model.objects.filter(
+            instance_date=row["raid_date"],
+            instance__name=row["instance_name"]
+        )
+
+class CharacterForeignKeyWidget(ForeignKeyWidget):
+    def get_queryset(self, value, row):
+        return self.model.objects.filter(
+            name=row["raid_character"],
+            #playable_class__name=row["raid_character_class"]
+        )
+
 class AttendanceResource(resources.ModelResource):
     raid = fields.Field(
-        column_name='raid',
+        column_name='raid_date',
         attribute='raid',
-        widget=ForeignKeyWidget(Raid, 'instance_date')
+        widget=RaidForeignKeyWidget(Raid,'instance_date')
     )
 
+    instance_name = fields.Field(
+        column_name='instance_name',
+        attribute='instance_name',
+    )
+    
     raid_character = fields.Field(
         column_name='raid_character',
         attribute='raid_character',
-        widget=ForeignKeyWidget(Character, 'name')
+        widget=CharacterForeignKeyWidget(Character, 'name')
+    )
+
+    raid_character_class = fields.Field(
+        column_name='raid_character_class',
+        attribute='raid_character_class',
     )
 
     class Meta:
