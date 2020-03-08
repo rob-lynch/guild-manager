@@ -110,6 +110,13 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'exceptional',
     )
 
+    search_fields = (
+        'raid__instance__name',
+        'character__name',
+        'boss__name',
+        'item__name',
+    )
+
     def item_link(self,obj):
         if obj.item.item_id:
             return mark_safe('<a href="https://classicdb.ch/?item=%s" target="blank" rel="item=%s">%s</a>' % (obj.item.item_id, obj.item.item_id, obj.item))
@@ -139,7 +146,10 @@ class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'item_id',
     )
 
-    search_fields = ('name','item_id',)
+    search_fields = (
+        'name',
+        'item_id',
+    )
 
     def item_link(self,obj):
         if obj.item_id:
