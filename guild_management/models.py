@@ -79,7 +79,7 @@ class Raid(models.Model):
     
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
     instance_date = models.DateField()
-    required = models.BooleanField()
+    required = models.BooleanField(default=True)
     
     @property
     def get_unique_instance(self):
