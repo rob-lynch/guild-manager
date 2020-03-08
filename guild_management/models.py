@@ -98,7 +98,7 @@ class Character(models.Model):
     level = models.SmallIntegerField(blank=False, default=60)
     guild_join_date = models.DateField(null=True, blank=True)
     raid_eligibility_date = models.DateField(null=True, blank=True)
-    playable_class = models.ForeignKey(PlayableClass, on_delete=models.CASCADE, verbose_name='Class', null=True, blank=True)
+    playable_class = models.ForeignKey(PlayableClass, on_delete=models.CASCADE, verbose_name='class', null=True, blank=True)
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, blank=True)
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE, default=1)
     rank = models.ForeignKey(Rank, on_delete=models.CASCADE, default=4)
