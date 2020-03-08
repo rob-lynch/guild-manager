@@ -77,8 +77,15 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_filter = (
         'raid',
         'raid_character',
+        'raid__instance__name',
+        'raid__instance_date',
     )
     
+    search_fields = ( 
+        'raid_character__name', 
+        'raid__instance__name',
+    )
+
     resource_class = AttendanceResource
 
 class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
