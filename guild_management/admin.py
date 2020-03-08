@@ -41,8 +41,6 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'attendance_percentage',
     )
     
-    #Should add a filter that hides alts by default
-
     list_filter = (
         AltFilter,
         'level', 
@@ -53,6 +51,8 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'guild',
         'rank',
     )
+
+    search_fields = ('name',)
 
     def name_alt(self,obj):
         if obj.main_character:
@@ -67,7 +67,6 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 
 class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
-        #This doesn't work
         js = ('guild_management/js/list_filter_collapse.js',)
     
     list_display = (
@@ -78,8 +77,15 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_filter = (
         'raid',
         'raid_character',
+        'raid__instance__name',
+        'raid__instance_date',
     )
     
+    search_fields = ( 
+        'raid_character__name', 
+        'raid__instance__name',
+    )
+
     resource_class = AttendanceResource
 
 class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
@@ -132,6 +138,8 @@ class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'item_link',
         'item_id',
     )
+
+    search_fields = ('name','item_id',)
 
     def item_link(self,obj):
         if obj.item_id:

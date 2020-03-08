@@ -57,7 +57,7 @@ class Instance(models.Model):
     class Meta:
         ordering = ['name']
     
-    name = models.CharField('Instance name', max_length=64, unique=True)
+    name = models.CharField('instance name', max_length=64, unique=True)
     dkp = models.SmallIntegerField(blank=False)
    
 class Guild(models.Model):

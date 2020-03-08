@@ -7,9 +7,9 @@
 param (
     [parameter(mandatory)] [string] $InputFile, 
     [string] $OutputFile="raid_data.csv",
-    [parameter(mandatory)] [ValidatePattern("\d{4}-\d{2}-\d{2}")] [string] $RaidDate
+    [parameter(mandatory)] [ValidatePattern("\d{4}-\d{2}-\d{2}")] [string] $RaidDate,
+    [parameter(mandatory)] [string][ValidateSet("Blackwing Lair","Molten Core","Naxxramas","Onyxia’s Lair","Temple of Ahn’Qiraj")] $InstanceName
 )
-
 
 #Import the csv
 $CsvImportObjectArray = Import-Csv -Path $InputFile
@@ -20,13 +20,16 @@ $CsvExportObjectArray = @()
 $CsvImportObjectArray | ForEach-Object $_ {
     $RecordObject = [PSCustomObject]@{
         raid_character = $_.player
-        raid = $RaidDate
+        raid_date = $RaidDate
+        instance_name = $InstanceName
+        raid_character_class = (Get-Culture).TextInfo.ToTitleCase($_.class.ToLower())
         id = ""
     }
 
     $CsvExportObjectArray += $recordObject
-} 
+}
+
 Write-Output $CsvExportObjectArray
 
 #Export the data to csv
-$CsvExportObjectArray | Export-Csv -Path $OutputFile -NoTypeInformation -Encoding ASCII
+$CsvExportObjectArray | Export-Csv -Path $OutputFile -NoTypeInformation -Encoding UTF8
