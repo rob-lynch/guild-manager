@@ -79,7 +79,8 @@ class Raid(models.Model):
     
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
     instance_date = models.DateField()
-
+    required = models.BooleanField()
+    
     @property
     def get_unique_instance(self):
         return self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
@@ -112,7 +113,7 @@ class Character(models.Model):
 
     @property
     def get_raids_attended_count(self):
-        attended_actual = Attendance.objects.filter(raid_character__id=self.id).count()
+        attended_actual = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).count()
         attended_adjusted =  attended_actual + self.attended_raids_override
         return attended_adjusted
 
@@ -120,7 +121,7 @@ class Character(models.Model):
     def get_eligible_raids_count(self):
         if self.raid_eligibility_date:
             eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
-            eligible_actual = Raid.objects.filter(instance_date__gt=eligibility_date).distinct('instance_date').count()
+            eligible_actual = Raid.objects.filter(required=True).filter(instance_date__gt=eligibility_date).distinct('instance_date').count()
             #This is incorrect
             eligible_adjusted = eligible_actual + self.eligible_raids_override
             return eligible_adjusted
@@ -152,7 +153,7 @@ class Npc(models.Model):
 
     name = models.CharField('NPC name', max_length=32, unique=True)
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE, null=True)
-    instance_appearance_order = models.SmallIntegerField(blank=True, null=True, unique=True)
+    instance_appearance_order = models.SmallIntegerField(blank=True, null=True)
 
 class Loot(models.Model):
     def __str__(self):
