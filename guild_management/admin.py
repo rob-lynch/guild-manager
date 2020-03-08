@@ -53,6 +53,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'character',
         'item_link',
         'priority',
+        'exceptional_checkmark_only',
         'notes',
     )
 
@@ -61,6 +62,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'boss',
         'character',
         'priority',
+        'exceptional',
     )
 
     def item_link(self,obj):
@@ -70,6 +72,15 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
             return obj.item.name
     item_link.allow_tags = True
     item_link.short_description = "Item"
+    
+    def exceptional_checkmark_only(self,obj):
+        if obj.exceptional_checkmark_only == True:
+            return self
+        else:
+            return None
+
+    exceptional_checkmark_only.allow_tags = True
+    exceptional_checkmark_only.short_description = "Exceptional"
     
     resource_class = AttendanceResource
 
