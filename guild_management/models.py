@@ -105,7 +105,8 @@ class Character(models.Model):
     eligible_raids_override = models.SmallIntegerField(blank=False, default=0)
     attended_raids_override = models.SmallIntegerField(blank=False, default=0)
     main_character = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-
+    active = models.BooleanField(default=True)
+    
     @property
     def get_alts(self):
         return Character.objects.filter(main_character=self.id)
