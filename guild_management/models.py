@@ -92,7 +92,7 @@ class Character(models.Model):
         return self.name
     
     class Meta:
-        ordering = ['name',]
+        ordering = ['-main_character__name','name',]
 
     name = models.CharField('Character name', max_length=32, unique=True)
     level = models.SmallIntegerField(blank=False, default=60)
@@ -104,7 +104,14 @@ class Character(models.Model):
     rank = models.ForeignKey(Rank, on_delete=models.CASCADE, default=4)
     eligible_raids_override = models.SmallIntegerField(blank=False, default=0)
     attended_raids_override = models.SmallIntegerField(blank=False, default=0)
-    
+    main_character = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+
+    @property
+    def get_alts(self):
+        return Character.objects.filter(main_character=self.id)
+
+    alts = get_alts
+
     @property
     def get_total_raids_count(self):
         return Raid.objects.count()
@@ -113,8 +120,23 @@ class Character(models.Model):
 
     @property
     def get_raids_attended_count(self):
-        attended_actual = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).count()
-        attended_adjusted =  attended_actual + self.attended_raids_override
+        alt_attended_actual = 0
+        alt_raid_ids = []
+
+        if self.alts:
+            for alt in self.alts:
+                alt_attended = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id)
+                alt_attended_actual += alt_attended.count()
+
+                for raids in alt_attended:
+                    alt_raid_ids.append(raids.id)
+                
+                if alt_attended_actual > 0:
+                    break
+
+        attended_actual = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).exclude(raid_id__in=alt_raid_ids).count()
+        attended_adjusted =  attended_actual + self.attended_raids_override + alt_attended_actual
+        
         return attended_adjusted
 
     @property
@@ -122,7 +144,6 @@ class Character(models.Model):
         if self.raid_eligibility_date:
             eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
             eligible_actual = Raid.objects.filter(required=True).filter(instance_date__gt=eligibility_date).distinct('instance_date').count()
-            #This is incorrect
             eligible_adjusted = eligible_actual + self.eligible_raids_override
             return eligible_adjusted
         else:
@@ -179,5 +200,5 @@ class Attendance(models.Model):
         ordering = ['-raid__instance_date','raid_character__name']
         verbose_name_plural = 'attendance'
     
-    raid_character = models.ForeignKey(Character, on_delete=models.CASCADE, verbose_name='Character')
+    raid_character = models.ForeignKey(Character, on_delete=models.CASCADE, verbose_name='character')
     raid = models.ForeignKey(Raid, on_delete=models.CASCADE)

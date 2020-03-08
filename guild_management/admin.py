@@ -5,8 +5,11 @@ from import_export.admin import ImportExportModelAdmin, ImportExportActionModelA
 from django.utils.html import mark_safe
 
 class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    class Media:
+        js = ('guild_management/js/list_filter_collapse.js',)
+        
     list_display = (
-        'name', 
+        'name_alt',
         'level', 
         'guild_join_date',
         'raid_eligibility_date',
@@ -17,6 +20,8 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'number_or_raids_attended',
         'attendance_percentage',
     )
+    
+    #Should add a filter that hides alts by default
 
     list_filter = (
         'level', 
@@ -28,9 +33,22 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'rank',
     )
 
+    def name_alt(self,obj):
+        if obj.main_character:
+            return obj.name + '*'
+        else:
+            return obj.name
+
+    name_alt.allow_tags = True
+    name_alt.short_description = "Character Name"
+
     resource_class = CharacterResource
 
 class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    class Media:
+        #This doesn't work
+        js = ('guild_management/js/list_filter_collapse.js',)
+    
     list_display = (
         'raid',
         'raid_character',
@@ -45,7 +63,7 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 
 class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
-        js = ("https://classicdb.ch/templates/wowhead/js/power.js",)
+        js = ('guild_management/js/list_filter_collapse.js','https://classicdb.ch/templates/wowhead/js/power.js',)
 
     list_display = (
         'raid',
@@ -70,6 +88,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
             return mark_safe('<a href="https://classicdb.ch/?item=%s" target="blank" rel="item=%s">%s</a>' % (obj.item.item_id, obj.item.item_id, obj.item))
         else:
             return obj.item.name
+
     item_link.allow_tags = True
     item_link.short_description = "Item"
     
@@ -86,7 +105,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 
 class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
-        js = ("https://classicdb.ch/templates/wowhead/js/power.js",)
+        js = ('https://classicdb.ch/templates/wowhead/js/power.js',)
 
     list_display = (
         'item_link',
