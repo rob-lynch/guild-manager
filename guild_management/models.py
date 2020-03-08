@@ -168,6 +168,7 @@ class Loot(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     boss = models.ForeignKey(Npc, on_delete=models.CASCADE, null=True, blank=True)
     priority = models.BooleanField()
+    exceptional = models.BooleanField()
     notes = models.TextField(blank=True, null=True)
 
 class Attendance(models.Model):    
