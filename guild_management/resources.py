@@ -47,7 +47,7 @@ class CharacterForeignKeyWidget(ForeignKeyWidget):
     def get_queryset(self, value, row):
         return self.model.objects.filter(
             name=row["raid_character"],
-            #playable_class__name=row["raid_character_class"]
+            playable_class__name=row["raid_character_class"]
         )
 
 class AttendanceResource(resources.ModelResource):
