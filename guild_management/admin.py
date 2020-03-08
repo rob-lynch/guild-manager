@@ -3,6 +3,26 @@ from .models import *
 from .resources import *
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from django.utils.html import mark_safe
+from django.contrib.admin import SimpleListFilter
+
+class AltFilter(SimpleListFilter):
+    title = 'character type'
+    parameter_name = 'character_type'
+
+    def lookups(self, request, model_admin):
+
+        return (
+            ('alt',('Alt')),
+            ('main',('Main')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'alt':
+            return queryset.exclude(main_character=None)
+        elif self.value() == 'main':
+            return queryset.filter(main_character=None)
+        else:
+            return queryset
 
 class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
@@ -24,6 +44,7 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     #Should add a filter that hides alts by default
 
     list_filter = (
+        AltFilter,
         'level', 
         'guild_join_date',
         'raid_eligibility_date',
