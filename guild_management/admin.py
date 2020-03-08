@@ -74,10 +74,10 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     item_link.short_description = "Item"
     
     def exceptional_checkmark_only(self,obj):
-        if obj.exceptional_checkmark_only == True:
-            return self
+        if obj.exceptional == True:
+            return mark_safe('<img src="/static/admin/img/icon-yes.svg" alt="True">')
         else:
-            return None
+            return ""
 
     exceptional_checkmark_only.allow_tags = True
     exceptional_checkmark_only.short_description = "Exceptional"
