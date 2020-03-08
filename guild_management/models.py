@@ -101,8 +101,9 @@ class Character(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE, null=True, blank=True)
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE, default=1)
     rank = models.ForeignKey(Rank, on_delete=models.CASCADE, default=4)
-    raid_count_override = models.SmallIntegerField(blank=False, default=0)
-
+    eligible_raids_override = models.SmallIntegerField(blank=False, default=0)
+    attended_raids_override = models.SmallIntegerField(blank=False, default=0)
+    
     @property
     def get_total_raids_count(self):
         return Raid.objects.count()
@@ -112,16 +113,16 @@ class Character(models.Model):
     @property
     def get_raids_attended_count(self):
         attended_actual = Attendance.objects.filter(raid_character__id=self.id).count()
-        attended_adjusted =  attended_actual + self.raid_count_override
+        attended_adjusted =  attended_actual + self.attended_raids_override
         return attended_adjusted
 
     @property
     def get_eligible_raids_count(self):
         if self.raid_eligibility_date:
             eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
-            eligible_actual = Raid.objects.filter(instance_date__gt=eligibility_date).count()
+            eligible_actual = Raid.objects.filter(instance_date__gt=eligibility_date).distinct('instance_date').count()
             #This is incorrect
-            eligible_adjusted = eligible_actual + self.raid_count_override
+            eligible_adjusted = eligible_actual + self.eligible_raids_override
             return eligible_adjusted
         else:
             return 0
