@@ -27,5 +27,5 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        DJANGO_SETTINGS_MODULE="guild_manager.settings.local" 
+        export DJANGO_SETTINGS_MODULE="guild_manager.settings.local" 
         python manage.py test
