@@ -78,3 +78,9 @@ heroku ps:scale web=1
 
 ### Deploying Updates
 [GitHub Integration (Heroku GitHub Deploys)](https://devcenter.heroku.com/articles/github-integration) is recommended, however changes can be pushed manually via the CLI by pushing you master branch up to Heroku `git push heroku master`. Anything called out in the `release:` stage of the [Procfile](Procfile) will be executed (ie: `python manage.py migrate`).
+
+
+### Testing
+```
+python -m coverage run --source='guild_management' manage.py test
+```
