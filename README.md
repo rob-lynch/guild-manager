@@ -1,3 +1,5 @@
+![Django CI](https://github.com/rob-lynch/guild-manager/workflows/Django%20CI/badge.svg)
+
 # guild-manager
 A web portal for managing WOW Guild rosters, loot distribution, viewing statistics (and for me to get my feet wet with Django :smile:)
 
