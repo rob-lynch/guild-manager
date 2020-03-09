@@ -200,7 +200,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     exceptional_checkmark_only.allow_tags = True
     exceptional_checkmark_only.short_description = "Exceptional"
     
-    resource_class = AttendanceResource
+    resource_class = LootResource
 
 class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:

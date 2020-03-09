@@ -76,7 +76,7 @@ class Raid(models.Model):
     
     class Meta:
         ordering = ['-instance_date','instance__name']
-    
+
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
     instance_date = models.DateField()
     required = models.BooleanField(default=True)
@@ -171,7 +171,7 @@ class Npc(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name',]
+        ordering = ['instance_appearance_order','name',]
 
     name = models.CharField('NPC name', max_length=32, unique=True)
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE, null=True)
@@ -182,7 +182,7 @@ class Loot(models.Model):
         return self.item.name
     
     class Meta:
-        ordering = ['-raid__instance_date','boss__instance_appearance_order','character__name','item__name']
+        ordering = ['-raid__instance_date','raid__instance__name','boss__instance_appearance_order','character__name','item__name']
         verbose_name_plural = 'loot'
 
     character = models.ForeignKey(Character, on_delete=models.CASCADE, blank=True, null=True)
