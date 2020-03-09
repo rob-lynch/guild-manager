@@ -17,10 +17,71 @@ class AltFilter(SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
+        model_name = queryset.model.__name__
+
+        def define_filter(model_name, filter_value):
+            if model_name == 'Character':
+                if filter_value:
+                    return queryset.filter(main_character=None)
+                else:
+                    return queryset.exclude(main_character=None)
+            if model_name == 'Attendance':
+                if filter_value:
+                    return queryset.filter(raid_character__main_character=None)
+                else:
+                    return queryset.exclude(raid_character__main_character=None)
+            if model_name == 'Loot':
+                if filter_value:
+                    return queryset.filter(character__main_character=None)
+                else:
+                    return queryset.exclude(character__main_character=None)
+
         if self.value() == 'alt':
-            return queryset.exclude(main_character=None)
+            return define_filter(model_name, False)
         elif self.value() == 'main':
-            return queryset.filter(main_character=None)
+            return define_filter(model_name, True)
+        else:
+            return queryset
+
+class ActiveFilter(SimpleListFilter):
+    title = 'membership status'
+    parameter_name = 'membership'
+
+    def lookups(self, request, model_admin):
+
+        return (
+            (None,('Active')),
+            ('inactive',('Inactive')),
+            ('all',('All')),
+        )
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({
+                    self.parameter_name: lookup,
+                }, []),
+                'display': title,
+            }
+
+
+    def queryset(self, request, queryset):
+        model_name = queryset.model.__name__
+
+        def define_filter(model_name, filter_value):
+            if model_name == 'Character':
+                return queryset.filter(active=filter_value)
+            if model_name == 'Attendance':
+                return queryset.filter(raid_character__active=filter_value)
+            if model_name == 'Loot':
+                return queryset.filter(character__active=filter_value)
+            
+        
+        if self.value() in ('active', None):
+            return define_filter(model_name, True)
+        elif self.value() == 'inactive':
+            return define_filter(model_name, False)
         else:
             return queryset
 
@@ -42,6 +103,7 @@ class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     )
     
     list_filter = (
+        ActiveFilter,
         AltFilter,
         'level', 
         'guild_join_date',
@@ -75,6 +137,8 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     )
 
     list_filter = (
+        ActiveFilter,
+        AltFilter,
         'raid',
         'raid_character',
         'raid__instance__name',
@@ -103,11 +167,20 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     )
 
     list_filter = (
+        ActiveFilter,
+        AltFilter,
         'raid',
         'boss',
         'character',
         'priority',
         'exceptional',
+    )
+
+    search_fields = (
+        'raid__instance__name',
+        'character__name',
+        'boss__name',
+        'item__name',
     )
 
     def item_link(self,obj):
@@ -139,7 +212,10 @@ class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         'item_id',
     )
 
-    search_fields = ('name','item_id',)
+    search_fields = (
+        'name',
+        'item_id',
+    )
 
     def item_link(self,obj):
         if obj.item_id:
