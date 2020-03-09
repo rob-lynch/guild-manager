@@ -85,7 +85,6 @@ class ActiveFilter(SimpleListFilter):
         else:
             return queryset
 
-
 class CharacterAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
         js = ('guild_management/js/list_filter_collapse.js',)
