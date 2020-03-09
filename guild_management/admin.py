@@ -17,10 +17,29 @@ class AltFilter(SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
+        model_name = queryset.model.__name__
+
+        def define_filter(model_name, filter_value):
+            if model_name == 'Character':
+                if filter_value:
+                    return queryset.filter(main_character=None)
+                else:
+                    return queryset.exclude(main_character=None)
+            if model_name == 'Attendance':
+                if filter_value:
+                    return queryset.filter(raid_character__main_character=None)
+                else:
+                    return queryset.exclude(raid_character__main_character=None)
+            if model_name == 'Loot':
+                if filter_value:
+                    return queryset.filter(character__main_character=None)
+                else:
+                    return queryset.exclude(character__main_character=None)
+
         if self.value() == 'alt':
-            return queryset.exclude(main_character=None)
+            return define_filter(model_name, False)
         elif self.value() == 'main':
-            return queryset.filter(main_character=None)
+            return define_filter(model_name, True)
         else:
             return queryset
 
@@ -50,7 +69,7 @@ class ActiveFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         model_name = queryset.model.__name__
 
-        def define_filter(self, model_name,filter_value):
+        def define_filter(model_name, filter_value):
             if model_name == 'Character':
                 return queryset.filter(active=filter_value)
             if model_name == 'Attendance':
@@ -60,9 +79,9 @@ class ActiveFilter(SimpleListFilter):
             
         
         if self.value() in ('active', None):
-            return define_filter(self, model_name, True)
+            return define_filter(model_name, True)
         elif self.value() == 'inactive':
-            return define_filter(self, model_name, False)
+            return define_filter(model_name, False)
         else:
             return queryset
 
