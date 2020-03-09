@@ -135,7 +135,7 @@ class Character(models.Model):
                 if alt_attended_actual > 0:
                     break
 
-        attended_actual = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).exclude(raid_id__in=alt_raid_ids).count()
+        attended_actual = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).exclude(raid_id__in=alt_raid_ids).distinct('raid__instance_date').count()
         attended_adjusted =  attended_actual + self.attended_raids_override + alt_attended_actual
         
         return attended_adjusted
