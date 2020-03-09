@@ -31,4 +31,5 @@ jobs:
     - name: Run Tests
       run: |
         export DJANGO_SETTINGS_MODULE="guild_manager.settings.local" 
-        coverage run manage.py test; coverage report;
+        python -m coverage run manage.py test
+        python -m covearge report

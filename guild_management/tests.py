@@ -140,7 +140,7 @@ class RaidTestCase(TestCase):
     def test_raid_name_is_returned(self):
         """The expected Raid name is returned"""
         raid = Raid.objects.get(instance__name='TestInstance')
-        self.assertEqual(str(raid), 'January 1, 2020 - TestInstance')
+        self.assertEqual(str(raid), 'January 01, 2020 - TestInstance')
 
 class LootTestCase(TestCase):
     def setUp(self):
