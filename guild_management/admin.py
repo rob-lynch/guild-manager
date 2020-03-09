@@ -4,6 +4,7 @@ from .resources import *
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from django.utils.html import mark_safe
 from django.contrib.admin import SimpleListFilter
+from django.db.models import Q
 
 class AltFilter(SimpleListFilter):
     title = 'character type'
@@ -75,9 +76,7 @@ class ActiveFilter(SimpleListFilter):
             if model_name == 'Attendance':
                 return queryset.filter(raid_character__active=filter_value)
             if model_name == 'Loot':
-                return queryset.filter(character__active=filter_value)
-            
-        
+                return queryset.filter(Q(character__active=filter_value) | Q(character__active=None))
         if self.value() in ('active', None):
             return define_filter(model_name, True)
         elif self.value() == 'inactive':
