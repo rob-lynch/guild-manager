@@ -81,6 +81,14 @@ heroku ps:scale web=1
 
 
 ### Testing
+[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code covearge. A coverage percentage of 80% or more must be maintained for code to be merged to master.
+To install coverage: 
+
 ```
-python -m coverage run --source='guild_management' manage.py test
+pip install coverage
+```
+
+To run tests with coverage and output the results:
+```
+covearge erase; coverage run manage.py test; coverage report; coverage html
 ```
