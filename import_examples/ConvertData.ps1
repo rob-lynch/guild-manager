@@ -31,5 +31,7 @@ $CsvImportObjectArray | ForEach-Object $_ {
 
 Write-Output $CsvExportObjectArray
 
-#Export the data to csv
-$CsvExportObjectArray | Export-Csv -Path $OutputFile -NoTypeInformation -Encoding UTF8
+#Export the data to csv. Note: When running from Windows, Export-Csv outputs with UT8-BOM encoding which is not compatible with the import.
+#Instead, explicitly set encoding to native windows format and dump the csv string array directly to file.
+$Encoding = [Text.Encoding]::GetEncoding('Windows-1252')
+[System.IO.File]::WriteAllLines((Join-Path $pwd $OutputFile),($CsvExportObjectArray | ConvertTo-Csv -NoTypeInformation),$Encoding)
