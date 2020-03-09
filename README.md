@@ -68,7 +68,6 @@ Note, the OAUTH user will not be able to access the admin portal until another a
 
 ### Initial Provisioning to Heroku
 Use the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) to create, manager and deploy the solution.
-Details here outlining steps in detail
 
 After deploying the code, be sure to set a super user, import stock data and start up a dyno:
 ```
@@ -78,4 +77,4 @@ heroku ps:scale web=1
 ```
 
 ### Deploying Updates
-Details here - likely to be automated on merge to master
+[GitHub Integration (Heroku GitHub Deploys)](https://devcenter.heroku.com/articles/github-integration) is recommended, however changes can be pushed manually via the CLI by pushing you master branch up to Heroku `git push heroku master`. Anything called out in the `release:` stage of the [Procfile](Procfile) will be executed (ie: `python manage.py migrate`).
