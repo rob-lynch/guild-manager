@@ -5,4 +5,4 @@ source = guild_management
 omit = guild_management/migrations/*,guild_management/__init__.py,guild_management/tests.py
 
 [report]
-fail_under = 50
+fail_under = 80
