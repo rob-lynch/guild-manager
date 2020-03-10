@@ -83,7 +83,7 @@ heroku ps:scale web=1
 
 
 ### Testing
-[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code coverage. A coverage percentage of 80% or more must be maintained for code to be merged to master.
+[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code coverage. A coverage percentage of 75% or more must be maintained for code to be merged to master.
 To install coverage: 
 
 ```
