@@ -1,3 +1,5 @@
+![Django CI](https://github.com/rob-lynch/guild-manager/workflows/Django%20CI/badge.svg)
+
 # guild-manager
 A web portal for managing WOW Guild rosters, loot distribution, viewing statistics (and for me to get my feet wet with Django :smile:)
 
@@ -78,3 +80,19 @@ heroku ps:scale web=1
 
 ### Deploying Updates
 [GitHub Integration (Heroku GitHub Deploys)](https://devcenter.heroku.com/articles/github-integration) is recommended, however changes can be pushed manually via the CLI by pushing you master branch up to Heroku `git push heroku master`. Anything called out in the `release:` stage of the [Procfile](Procfile) will be executed (ie: `python manage.py migrate`).
+
+
+### Testing
+[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code coverage. A coverage percentage of 80% or more must be maintained for code to be merged to master.
+To install coverage: 
+
+```
+pip install coverage
+```
+
+To run tests with coverage and output the results:
+```
+coverage erase; coverage run manage.py test; coverage report; coverage html
+```
+
+A passing Dango CI status check is requied for all PRs targeting master. The workflow can be found [here](https://github.com/rob-lynch/guild-manager/actions?query=workflow%3A%22Django+CI%22).

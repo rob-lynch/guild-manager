@@ -1,0 +1,8 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+source = guild_management
+omit = guild_management/migrations/*,guild_management/__init__.py,guild_management/tests.py
+
+[report]
+fail_under = 80
