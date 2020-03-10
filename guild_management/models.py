@@ -114,12 +114,6 @@ class Character(models.Model):
     alts = get_alts
 
     @property
-    def get_total_raids_count(self):
-        return Raid.objects.count()
-
-    total_raids_count = get_total_raids_count
-
-    @property
     def get_raids_attended_count(self):
         alt_attended_actual = 0
         alt_raid_ids = []
@@ -144,7 +138,7 @@ class Character(models.Model):
     def get_eligible_raids_count(self):
         if self.raid_eligibility_date:
             eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
-            eligible_actual = Raid.objects.filter(required=True).filter(instance_date__gt=eligibility_date).distinct('instance_date').count()
+            eligible_actual = Raid.objects.filter(required=True).filter(instance_date__gte=eligibility_date).distinct('instance_date').count()
             eligible_adjusted = eligible_actual + self.eligible_raids_override
             return eligible_adjusted
         else:
