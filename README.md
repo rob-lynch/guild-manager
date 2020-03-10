@@ -95,4 +95,4 @@ To run tests with coverage and output the results:
 coverage erase; coverage run manage.py test; coverage report; coverage html
 ```
 
-A passing Dango CI status check is requied for all PRs targeting master. The workflow can be found [here](actions?query=workflow%3A%22Django+CI%22).
+A passing Dango CI status check is requied for all PRs targeting master. The workflow can be found [here](https://github.com/rob-lynch/guild-manager/actions?query=workflow%3A%22Django+CI%22).
