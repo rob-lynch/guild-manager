@@ -33,4 +33,4 @@ jobs:
       run: |
         export DJANGO_SETTINGS_MODULE="guild_manager.settings.local" 
         python -m coverage run manage.py test
-        python -m covearge report
+        python -m coverage report

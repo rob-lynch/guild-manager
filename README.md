@@ -92,5 +92,7 @@ pip install coverage
 
 To run tests with coverage and output the results:
 ```
-covearge erase; coverage run manage.py test; coverage report; coverage html
+coverage erase; coverage run manage.py test; coverage report; coverage html
 ```
+
+A passing Dango CI status check is requied for all PRs targeting master. The workflow can be found (here)[actions?query=workflow%3A"Django+CI"].
