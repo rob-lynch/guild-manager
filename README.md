@@ -83,7 +83,7 @@ heroku ps:scale web=1
 
 
 ### Testing
-[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code covearge. A coverage percentage of 80% or more must be maintained for code to be merged to master.
+[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code coverage. A coverage percentage of 80% or more must be maintained for code to be merged to master.
 To install coverage: 
 
 ```
@@ -95,4 +95,4 @@ To run tests with coverage and output the results:
 coverage erase; coverage run manage.py test; coverage report; coverage html
 ```
 
-A passing Dango CI status check is requied for all PRs targeting master. The workflow can be found (here)[actions?query=workflow%3A"Django+CI"].
+A passing Dango CI status check is requied for all PRs targeting master. The workflow can be found [here](actions?query=workflow%3A%22Django+CI%22).
