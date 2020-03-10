@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import *
-from .resources import *
+from .models import Attendance, Character, Loot, Raid, Npc, Item, Guild, PlayableClass, Instance, Realm, Rank, Race
+from .resources import CharacterResource, AttendanceResource, LootResource, ItemResource
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from django.utils.html import mark_safe
 from django.contrib.admin import SimpleListFilter
@@ -44,6 +44,39 @@ class AltFilter(SimpleListFilter):
         else:
             return queryset
 
+class CharacterFilter(SimpleListFilter):
+    title = 'character'
+    parameter_name = 'character_list'
+
+    def parse_character_list_to_int(self, character_list):
+        id_list_string = character_list.split(',')
+        return list(map(int, id_list_string))
+
+    def lookups(self, request, model_admin):
+        characters = Character.objects.all()
+        incoming_ids = None
+
+        if 'character_list' in request.GET:
+            incoming_ids = request.GET['character_list'].split(',')
+
+        character_tuple = ()
+        for c in characters:
+            if incoming_ids:
+                unique_id_list = set([*incoming_ids, str(c.id)])
+                full_id_list = ','.join(unique_id_list)
+            else:
+                full_id_list = str(c.id)
+            character_tuple = (*character_tuple, (full_id_list,(c.name)))
+
+        return character_tuple
+
+    def queryset(self, request, queryset):
+        if 'character_list' in request.GET:
+            character_ids = CharacterFilter.parse_character_list_to_int(self, request.GET['character_list'])
+            return queryset.filter(character__id__in=character_ids)
+        else:
+            return queryset
+            
 class ActiveFilter(SimpleListFilter):
     title = 'membership status'
     parameter_name = 'membership'
@@ -168,9 +201,9 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_filter = (
         ActiveFilter,
         AltFilter,
+        CharacterFilter,
         'raid',
         'boss',
-        'character',
         'priority',
         'exceptional',
     )
