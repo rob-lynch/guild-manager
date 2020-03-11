@@ -6,6 +6,7 @@ A web portal for managing WOW Guild rosters, loot distribution, viewing statisti
 Built using:
  * [django](https://www.djangoproject.com/)
  * [PostgreSQL](https://www.postgresql.org/)
+ * [Redis](https://redis.io/)
  * [Heroku](https://www.heroku.com/)
 
 Contributions and feedback welcome!
@@ -20,7 +21,7 @@ Admin/User documentation can be found here:
 * Can manage multiple realms and guilds (no multi-tenancy/siloing as of yet)
 
 ### Local Development Setup
-**Pre-reqs:** Python 3.x, Pip, PostgreSQL (recommended via Docker)
+**Pre-reqs:** Python 3.x, Pip, and PostgreSQL/Redis (recommended via Docker)
 
 **Create a virtual environment, install the dependencies and configure to use the local settings file:***
 ```
@@ -38,6 +39,11 @@ pip install -r requirements.txt
 **Start up a postgres db using Docker:**
 ```
 docker run -p 5432:5432 --name guild_manager -e POSTGRES_PASSWORD=password -e POSTGRES_USER=guild_manager -d postgres
+```
+
+**Start up a redis instance using Docker:**
+```
+docker run -p 6379:6379 --name redis -d redis
 ```
 
 **Make and Run the migrations to create/populate the tables:**
@@ -83,7 +89,7 @@ heroku ps:scale web=1
 
 
 ### Testing
-[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code coverage. A coverage percentage of 75% or more must be maintained for code to be merged to master.
+[coverage](https://coverage.readthedocs.io/en/coverage-5.0.3/) is used to calculate code coverage. A coverage percentage of 70% or more must be maintained for code to be merged to master.
 To install coverage: 
 
 ```

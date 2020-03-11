@@ -1,6 +1,22 @@
+from django.contrib.admin.models import LogEntry
 from django.db import models
-
+from django.db.models import Max
+from django.core.cache import cache
 import datetime 
+
+def get_set_cache(self, key_name, data=None):
+    if hasattr(self, 'id'):
+        cache_key = key_name + '_' + str(self.id)
+    else:
+        cache_key = key_name
+
+    if data:
+        #print('Setting cache. Key:' + cache_key + ' Value: ' + str(data))
+        cache.set(cache_key, data)
+    else:
+        cache_data = cache.get(cache_key)
+        #print('Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
+        return cache_data
 
 class PlayableClass(models.Model):
     def __str__(self):
@@ -83,7 +99,14 @@ class Raid(models.Model):
     
     @property
     def get_unique_instance(self):
-        return self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
+        key_name = 'instance'
+        data = get_set_cache(self, key_name)
+
+        if not data:
+            data = self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
+        
+        get_set_cache(self, key_name, data)
+        return data
 
     unique_instance_name = get_unique_instance
 
@@ -109,8 +132,16 @@ class Character(models.Model):
     
     @property
     def get_alts(self):
-        return Character.objects.filter(main_character=self.id)
+        key_name = 'character_alts'
+        data = get_set_cache(self, key_name)
 
+        if not data:
+            data = Character.objects.filter(main_character=self.id)
+        
+        get_set_cache(self, key_name, data)
+
+        return data
+        
     alts = get_alts
 
     @property
@@ -120,7 +151,15 @@ class Character(models.Model):
 
         if self.alts:
             for alt in self.alts:
-                alt_attended = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id)
+                key_name = 'alt_attendance_count'
+                data = get_set_cache(self, key_name)
+
+                if not data:   
+                    data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id)
+
+                get_set_cache(self, key_name, data)
+
+                alt_attended = data
                 alt_attended_actual += alt_attended.count()
 
                 for raids in alt_attended:
@@ -128,17 +167,30 @@ class Character(models.Model):
                 
                 if alt_attended_actual > 0:
                     break
-
-        attended_actual = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).exclude(raid_id__in=alt_raid_ids).distinct('raid__instance_date').count()
-        attended_adjusted =  attended_actual + self.attended_raids_override + alt_attended_actual
         
+        cache_key = 'attendance_actual_' + str(self.id)
+        data = cache.get(cache_key)
+        if not data:   
+            data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=self.id).exclude(raid_id__in=alt_raid_ids).distinct('raid__instance_date').count()
+        cache.set(cache_key, data)
+
+        attended_actual = data
+
+        attended_adjusted =  attended_actual + self.attended_raids_override + alt_attended_actual
+
         return attended_adjusted
 
     @property
     def get_eligible_raids_count(self):
         if self.raid_eligibility_date:
             eligibility_date = self.raid_eligibility_date.strftime('%Y-%m-%d')
-            eligible_actual = Raid.objects.filter(required=True).filter(instance_date__gte=eligibility_date).distinct('instance_date').count()
+            cache_key = 'eligible_actual_' + str(self.id)
+            data = cache.get(cache_key)
+            if not data:   
+                data = Raid.objects.filter(required=True).filter(instance_date__gte=eligibility_date).distinct('instance_date').count()
+            cache.set(cache_key, data)
+            
+            eligible_actual = data
             eligible_adjusted = eligible_actual + self.eligible_raids_override
             return eligible_adjusted
         else:
