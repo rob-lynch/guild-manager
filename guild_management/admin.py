@@ -52,8 +52,17 @@ class CharacterFilter(SimpleListFilter):
         id_list_string = character_list.split(',')
         return list(map(int, id_list_string))
 
+    def define_membership(self, request):
+        if 'membership' in request.GET:
+            if request.GET['membership'] == 'active':
+                return True
+            else:
+                return False
+        else:
+            return True
+    
     def lookups(self, request, model_admin):
-        characters = Character.objects.all()
+        characters = Character.objects.filter(active = CharacterFilter.define_membership(self, request))
         incoming_ids = None
 
         if 'character_list' in request.GET:
