@@ -20,9 +20,6 @@ DATABASES = {
     }
 }
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
