@@ -56,6 +56,9 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 600
+
 ROOT_URLCONF = 'guild_manager.urls'
 
 TEMPLATES = [

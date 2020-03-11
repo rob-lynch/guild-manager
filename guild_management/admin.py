@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Attendance, Character, Loot, Raid, Npc, Item, Guild, PlayableClass, Instance, Realm, Rank, Race
+from .models import Attendance, Character, Loot, Raid, Npc, Item, Guild, PlayableClass, Instance, Realm, Rank, Race, get_set_cache
 from .resources import CharacterResource, AttendanceResource, LootResource, ItemResource
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 from django.utils.html import mark_safe
@@ -62,7 +62,15 @@ class CharacterFilter(SimpleListFilter):
             return True
     
     def lookups(self, request, model_admin):
-        characters = Character.objects.filter(active = CharacterFilter.define_membership(self, request))
+        key_name = 'character_lookup'
+        data = get_set_cache(self, key_name)
+        
+        if not data:
+            data = Character.objects.filter(active=CharacterFilter.define_membership(self, request))
+        
+        get_set_cache(self, key_name, data)
+
+        characters = data
         incoming_ids = None
 
         if 'character_list' in request.GET:
@@ -107,7 +115,6 @@ class ActiveFilter(SimpleListFilter):
                 }, []),
                 'display': title,
             }
-
 
     def queryset(self, request, queryset):
         model_name = queryset.model.__name__

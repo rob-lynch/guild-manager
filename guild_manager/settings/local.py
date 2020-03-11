@@ -20,8 +20,17 @@ DATABASES = {
     }
 }
 
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-    }
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'MAX_ENTRIES': 5000
+        },
+        'TIMEOUT': 300,
+    },
 }
