@@ -11,11 +11,11 @@ def get_set_cache(self, key_name, data=None):
         cache_key = key_name
 
     if data:
-        print('Setting cache. Key:' + cache_key + ' Value: ' + str(data))
+        #print('Setting cache. Key:' + cache_key + ' Value: ' + str(data))
         cache.set(cache_key, data)
     else:
         cache_data = cache.get(cache_key)
-        print('Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
+        #print('Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
         return cache_data
 
 class PlayableClass(models.Model):

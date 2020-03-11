@@ -26,9 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install coverage
-    - name: Setup DB
+    - name: Setup DB and Redis
       run: |
         docker run -p 5432:5432 --name guild_manager -e POSTGRES_PASSWORD=password -e POSTGRES_USER=guild_manager -d postgres
+        docker run -p 6379:6379 --name redis -d redis
     - name: Run Tests
       run: |
         export DJANGO_SETTINGS_MODULE="guild_manager.settings.local" 
