@@ -23,6 +23,6 @@ CACHES = {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'MAX_ENTRIES': 5000
         },
-        'TIMEOUT': 300,
+        'TIMEOUT': 3600,
     },
 }
