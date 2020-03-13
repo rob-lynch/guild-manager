@@ -26,8 +26,8 @@ Calculating the total number of eligible and attended raids takes into account t
 * The raid was marked as required
 * The raid date is unique (Ex: 2 raids on 1 day counts as 1 eligible raid/1 attended raid)
 * The raid occurred after the date set in the character's "Raid eligibility date" field
-* Any value entered into the character's "Eligible raids override" or "Attended raids override" field is added to the computed value of each respective total
-* Main characters who's linked Alts have joined a raid will inherit their attendance point
+* Any value entered into the character's "Eligible raids override" or "Attended raids override" field is added to the computed value of each respective field
+* Main characters with a linked Alt that joined a raid will inherit their attendance
 
 ### Local Development Setup
 **Pre-reqs:** Python 3.x, Pip, and PostgreSQL/Redis (recommended via Docker)
