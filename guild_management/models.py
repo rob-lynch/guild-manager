@@ -155,7 +155,7 @@ class Character(models.Model):
                 data = get_set_cache(self, key_name)
 
                 if not data:   
-                    data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id)
+                    data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id).distinct('raid__instance_date')
 
                 get_set_cache(self, key_name, data)
 
