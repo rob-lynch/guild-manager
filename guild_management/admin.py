@@ -202,7 +202,7 @@ class AttendanceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 
 class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
-        js = ('guild_management/js/list_filter_collapse.js','https://classicdb.ch/templates/wowhead/js/power.js',)
+        js = ('guild_management/js/list_filter_collapse.js','guild_management/js/wowhead.js',)
 
     list_display = (
         'raid',
@@ -254,7 +254,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
 
 class ItemAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     class Media:
-        js = ('https://classicdb.ch/templates/wowhead/js/power.js',)
+        js = ('guild_management/js/wowhead.js',)
 
     list_display = (
         'item_link',
