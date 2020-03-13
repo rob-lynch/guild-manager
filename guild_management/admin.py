@@ -219,6 +219,7 @@ class LootAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
         AltFilter,
         CharacterFilter,
         'raid',
+        'character__playable_class',
         'boss',
         'priority',
         'exceptional',
