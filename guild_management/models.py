@@ -13,7 +13,6 @@ def get_set_cache(self, key_name, data=None):
         cache_key = key_name
 
     if data and self.cache_ttl > 0:
-        #print('Setting cache. Key:' + cache_key + ' Value: ' + str(data))
         cache.set(cache_key, data)
     else:
         now = datetime.datetime.now(timezone.utc)
@@ -24,24 +23,11 @@ def get_set_cache(self, key_name, data=None):
         cache_ttl_delta =  cache_timeout - cache_ttl
         cache_set_date = now - timedelta(seconds=cache_ttl_delta)
 
- #       print('')
- #       print('----------------------------------')
- #       print('')
- #       print('Last Updated: ' + str(last_updated['action_time__max']))
-#        print('Cache Timeout: ' + str(cache_timeout))
-#        print('Cache TTL: ' + str(cache_ttl))
-#        print('Cache TTL Delta: ' + str(cache_ttl_delta))
-#        print('Cache Expire Set Date: ' + str(cache_set_date))
-#        print('Cache Expiry Date: ' + str(cache_ttl_date))
-
         if last_updated['action_time__max'] < cache_set_date  :
             cache_data = cache.get(cache_key)
             if cache_data:
-                #print('++++Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
                 get_set_cache(self, cache_key, cache_data)
             return cache_data
-        #else:
-            #print('++++Cache too old. Key:' + cache_key)
 
 class PlayableClass(models.Model):
     def __str__(self):
