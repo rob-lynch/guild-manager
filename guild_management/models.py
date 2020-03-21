@@ -1,8 +1,10 @@
 from django.contrib.admin.models import LogEntry
+from django.conf import settings
 from django.db import models
 from django.db.models import Max
 from django.core.cache import cache
-import datetime 
+import datetime
+from datetime import timedelta, timezone
 
 def get_set_cache(self, key_name, data=None):
     if hasattr(self, 'id'):
@@ -10,13 +12,36 @@ def get_set_cache(self, key_name, data=None):
     else:
         cache_key = key_name
 
-    if data:
+    if data and self.cache_ttl > 0:
         #print('Setting cache. Key:' + cache_key + ' Value: ' + str(data))
         cache.set(cache_key, data)
     else:
-        cache_data = cache.get(cache_key)
-        #print('Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
-        return cache_data
+        now = datetime.datetime.now(timezone.utc)
+        last_updated = LogEntry.objects.filter(content_type_id__app_label='guild_management').aggregate(Max('action_time'))
+        cache_ttl = cache.ttl(cache_key)
+        cache_ttl_date = now + timedelta(seconds=cache_ttl)
+        cache_timeout = settings.CACHES['default']['TIMEOUT']
+        cache_ttl_delta =  cache_timeout - cache_ttl
+        cache_set_date = now - timedelta(seconds=cache_ttl_delta)
+
+ #       print('')
+ #       print('----------------------------------')
+ #       print('')
+ #       print('Last Updated: ' + str(last_updated['action_time__max']))
+#        print('Cache Timeout: ' + str(cache_timeout))
+#        print('Cache TTL: ' + str(cache_ttl))
+#        print('Cache TTL Delta: ' + str(cache_ttl_delta))
+#        print('Cache Expire Set Date: ' + str(cache_set_date))
+#        print('Cache Expiry Date: ' + str(cache_ttl_date))
+
+        if last_updated['action_time__max'] < cache_set_date  :
+            cache_data = cache.get(cache_key)
+            if cache_data:
+                #print('++++Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
+                get_set_cache(self, cache_key, cache_data)
+            return cache_data
+        #else:
+            #print('++++Cache too old. Key:' + cache_key)
 
 class PlayableClass(models.Model):
     def __str__(self):
@@ -105,7 +130,6 @@ class Raid(models.Model):
         if not data:
             data = self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
         
-        get_set_cache(self, key_name, data)
         return data
 
     unique_instance_name = get_unique_instance
@@ -138,8 +162,6 @@ class Character(models.Model):
         if not data:
             data = Character.objects.filter(main_character=self.id)
         
-        get_set_cache(self, key_name, data)
-
         return data
         
     alts = get_alts
@@ -156,8 +178,6 @@ class Character(models.Model):
 
                 if not data:   
                     data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id).distinct('raid__instance_date')
-
-                get_set_cache(self, key_name, data)
 
                 alt_attended = data
                 alt_attended_actual += alt_attended.count()
