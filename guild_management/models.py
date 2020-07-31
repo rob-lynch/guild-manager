@@ -7,12 +7,13 @@ import datetime
 from datetime import timedelta, timezone
 
 def get_set_cache(self, key_name, data=None):
+
     if hasattr(self, 'id'):
         cache_key = key_name + '_' + str(self.id)
     else:
         cache_key = key_name
 
-    if data and self.cache_ttl > 0:
+    if data:
         cache.set(cache_key, data)
     else:
         now = datetime.datetime.now(timezone.utc)
@@ -28,8 +29,6 @@ def get_set_cache(self, key_name, data=None):
 
         if last_updated['action_time__max'] < cache_set_date:
             cache_data = cache.get(cache_key)
-            if cache_data:
-                get_set_cache(self, cache_key, cache_data)
             return cache_data
 
 class PlayableClass(models.Model):
@@ -115,7 +114,6 @@ class Raid(models.Model):
     def get_unique_instance(self):
         key_name = 'instance'
         data = get_set_cache(self, key_name)
-
         if not data:
             data = self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
         
@@ -152,6 +150,7 @@ class Character(models.Model):
         if not data:
             data = Character.objects.filter(main_character=self.id)
         
+        get_set_cache(self, key_name, data)
         return data
         
     alts = get_alts
@@ -170,7 +169,7 @@ class Character(models.Model):
                     data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id).distinct('raid__instance_date')
 
                 get_set_cache(self, key_name, data)
-                
+
                 alt_attended = data
                 alt_attended_actual += alt_attended.count()
 
