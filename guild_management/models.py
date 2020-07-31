@@ -1,8 +1,10 @@
 from django.contrib.admin.models import LogEntry
+from django.conf import settings
 from django.db import models
 from django.db.models import Max
 from django.core.cache import cache
-import datetime 
+import datetime
+from datetime import timedelta, timezone
 
 def get_set_cache(self, key_name, data=None):
     if hasattr(self, 'id'):
@@ -11,12 +13,22 @@ def get_set_cache(self, key_name, data=None):
         cache_key = key_name
 
     if data:
-        #print('Setting cache. Key:' + cache_key + ' Value: ' + str(data))
         cache.set(cache_key, data)
     else:
-        cache_data = cache.get(cache_key)
-        #print('Getting cache. Key:' + cache_key + ' Value: ' + str(cache_data))
-        return cache_data
+        now = datetime.datetime.now(timezone.utc)
+        last_updated = LogEntry.objects.filter(content_type_id__app_label='guild_management').aggregate(Max('action_time'))
+        if last_updated['action_time__max'] is None: 
+            last_updated['action_time__max'] = now
+
+        cache_ttl = cache.ttl(cache_key)
+        cache_ttl_date = now + timedelta(seconds=cache_ttl)
+        cache_timeout = settings.CACHES['default']['TIMEOUT']
+        cache_ttl_delta =  cache_timeout - cache_ttl
+        cache_set_date = now - timedelta(seconds=cache_ttl_delta)
+
+        if last_updated['action_time__max'] < cache_set_date:
+            cache_data = cache.get(cache_key)
+            return cache_data
 
 class PlayableClass(models.Model):
     def __str__(self):
@@ -101,7 +113,7 @@ class Raid(models.Model):
     def get_unique_instance(self):
         key_name = 'instance'
         data = get_set_cache(self, key_name)
-
+        
         if not data:
             data = self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
         
@@ -139,7 +151,6 @@ class Character(models.Model):
             data = Character.objects.filter(main_character=self.id)
         
         get_set_cache(self, key_name, data)
-
         return data
         
     alts = get_alts
