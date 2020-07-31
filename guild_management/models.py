@@ -119,6 +119,7 @@ class Raid(models.Model):
         if not data:
             data = self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
         
+        get_set_cache(self, key_name, data)
         return data
 
     unique_instance_name = get_unique_instance
@@ -168,6 +169,8 @@ class Character(models.Model):
                 if not data:   
                     data = Attendance.objects.filter(raid__required=True).filter(raid_character__id=alt.id).distinct('raid__instance_date')
 
+                get_set_cache(self, key_name, data)
+                
                 alt_attended = data
                 alt_attended_actual += alt_attended.count()
 
