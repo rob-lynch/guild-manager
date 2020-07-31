@@ -159,7 +159,7 @@ class Character(models.Model):
 
         if self.alts:
             for alt in self.alts:
-                key_name = 'alt_attendance_count'
+                key_name = 'alt_attendance_count_ '+ str(alt.id)
                 data = get_set_cache(self, key_name)
 
                 if not data:   
@@ -171,9 +171,6 @@ class Character(models.Model):
                 for raids in alt_attended:
                     alt_raid_ids.append(raids.id)
                 
-                if alt_attended_actual > 0:
-                    break
-        
         cache_key = 'attendance_actual_' + str(self.id)
         data = cache.get(cache_key)
         if not data:   
@@ -181,7 +178,6 @@ class Character(models.Model):
         cache.set(cache_key, data)
 
         attended_actual = data
-
         attended_adjusted =  attended_actual + self.attended_raids_override + alt_attended_actual
 
         return attended_adjusted
