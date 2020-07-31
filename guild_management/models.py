@@ -17,13 +17,16 @@ def get_set_cache(self, key_name, data=None):
     else:
         now = datetime.datetime.now(timezone.utc)
         last_updated = LogEntry.objects.filter(content_type_id__app_label='guild_management').aggregate(Max('action_time'))
+        if last_updated['action_time__max'] is None: 
+            last_updated['action_time__max'] = now
+
         cache_ttl = cache.ttl(cache_key)
         cache_ttl_date = now + timedelta(seconds=cache_ttl)
         cache_timeout = settings.CACHES['default']['TIMEOUT']
         cache_ttl_delta =  cache_timeout - cache_ttl
         cache_set_date = now - timedelta(seconds=cache_ttl_delta)
 
-        if last_updated['action_time__max'] < cache_set_date  :
+        if last_updated['action_time__max'] < cache_set_date:
             cache_data = cache.get(cache_key)
             if cache_data:
                 get_set_cache(self, cache_key, cache_data)
