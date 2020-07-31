@@ -7,7 +7,6 @@ import datetime
 from datetime import timedelta, timezone
 
 def get_set_cache(self, key_name, data=None):
-
     if hasattr(self, 'id'):
         cache_key = key_name + '_' + str(self.id)
     else:
@@ -114,6 +113,7 @@ class Raid(models.Model):
     def get_unique_instance(self):
         key_name = 'instance'
         data = get_set_cache(self, key_name)
+        
         if not data:
             data = self.instance_date.strftime('%B %d, %Y') + ' - ' + self.instance.name
         
