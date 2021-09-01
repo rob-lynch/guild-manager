@@ -13,7 +13,7 @@ pylibmc==1.6.1
 django_redis==4.11.0
 ## The following requirements were added by pip freeze:
 appdirs==1.4.3
-asgiref==3.2.3
+asgiref==3.4.1
 astroid==2.3.3
 certifi==2019.11.28
 chardet==3.0.4
