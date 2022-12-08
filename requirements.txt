@@ -15,7 +15,7 @@ django_redis==4.11.0
 appdirs==1.4.3
 asgiref==3.4.1
 astroid==2.3.3
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 colorama==0.4.3
 defusedxml==0.6.0
